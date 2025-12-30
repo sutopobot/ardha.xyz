@@ -22,12 +22,10 @@ export default function Footer() {
         <li>
           <a
             className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://facebook.com/ardhayosef"
+            href="mailto:mail@ardha.xyz"
           >
             <ArrowIcon />
-            <p className="ml-2 h-7">facebook</p>
+            <p className="ml-2 h-7">email</p>
           </a>
         </li>
         <li>

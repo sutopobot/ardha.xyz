@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     template: '%s | Ardha Portfolio Starter',
   },
   description: 'This is Ardha portfolio.',
+  icons: {
+    icon: '/favicon.png',
+  },
   openGraph: {
     title: 'My Portfolio',
     description: 'This is my portfolio.',
