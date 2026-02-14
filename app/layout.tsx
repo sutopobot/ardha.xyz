@@ -6,7 +6,8 @@ import { Navbar } from './components/nav'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import Footer from './components/footer'
-import { baseUrl } from './sitemap'
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ardha.xyz'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -39,7 +40,8 @@ export const metadata: Metadata = {
   },
 }
 
-const cx = (...classes) => classes.filter(Boolean).join(' ')
+const cx = (...classes: (string | boolean | undefined | null)[]) =>
+  classes.filter(Boolean).join(' ')
 
 export default function RootLayout({
   children,
@@ -56,7 +58,13 @@ export default function RootLayout({
       )}
     >
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
-        <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black dark:focus:bg-black dark:focus:text-white"
+        >
+          Skip to main content
+        </a>
+        <main id="main-content" className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
           <Navbar />
           {children}
           <Footer />

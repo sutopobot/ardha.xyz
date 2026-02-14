@@ -1,7 +1,20 @@
 import { notFound } from 'next/navigation'
 import { CustomMDX } from 'app/components/mdx'
 import { formatDate, getBlogPosts } from 'app/blog/utils'
-import { baseUrl } from 'app/sitemap'
+import type { Metadata } from 'next'
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ardha.xyz'
+
+// Calculate reading time helper
+const calculateReadingTime = (content: string) => {
+  const wordsPerMinute = 200
+  const words = content.trim().split(/\s+/).length
+  return Math.ceil(words / wordsPerMinute)
+}
+
+type PageParams = {
+  slug: string
+}
 
 export async function generateStaticParams() {
   let posts = getBlogPosts()
@@ -11,10 +24,11 @@ export async function generateStaticParams() {
   }))
 }
 
-export function generateMetadata({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug)
+export async function generateMetadata({ params }: { params: Promise<PageParams> }): Promise<Metadata | undefined> {
+  const { slug } = await params
+  let post = getBlogPosts().find((post) => post.slug === slug)
   if (!post) {
-    return
+    return undefined
   }
 
   let {
@@ -51,8 +65,9 @@ export function generateMetadata({ params }) {
   }
 }
 
-export default function Blog({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug)
+export default async function Blog({ params }: { params: Promise<PageParams> }) {
+  const { slug } = await params
+  let post = getBlogPosts().find((post) => post.slug === slug)
 
   if (!post) {
     notFound()
@@ -77,7 +92,7 @@ export default function Blog({ params }) {
             url: `${baseUrl}/blog/${post.slug}`,
             author: {
               '@type': 'Person',
-              name: 'My Portfolio',
+              name: 'Ardha Portfolio',
             },
           }),
         }}
@@ -85,10 +100,27 @@ export default function Blog({ params }) {
       <h1 className="title font-semibold text-2xl tracking-tighter">
         {post.metadata.title}
       </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 mb-8 text-sm gap-2">
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
           {formatDate(post.metadata.publishedAt)}
         </p>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-neutral-600 dark:text-neutral-400">
+            {calculateReadingTime(post.content)} min read
+          </span>
+          {post.metadata.tags && post.metadata.tags.length > 0 && (
+            <div className="flex gap-2">
+              {post.metadata.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-1 rounded-full text-xs bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       <article className="prose">
         <CustomMDX source={post.content} />

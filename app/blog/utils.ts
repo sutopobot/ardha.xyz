@@ -1,45 +1,45 @@
 import fs from 'fs'
 import path from 'path'
+import matter from 'gray-matter'
 
-type Metadata = {
+export type Metadata = {
   title: string
   publishedAt: string
   summary: string
   image?: string
+  tags?: string[]
 }
 
-function parseFrontmatter(fileContent: string) {
-  let frontmatterRegex = /---\s*([\s\S]*?)\s*---/
-  let match = frontmatterRegex.exec(fileContent)
-  let frontMatterBlock = match![1]
-  let content = fileContent.replace(frontmatterRegex, '').trim()
-  let frontMatterLines = frontMatterBlock.trim().split('\n')
-  let metadata: Partial<Metadata> = {}
-
-  frontMatterLines.forEach((line) => {
-    let [key, ...valueArr] = line.split(': ')
-    let value = valueArr.join(': ').trim()
-    value = value.replace(/^['"](.*)['"]$/, '$1') // Remove quotes
-    metadata[key.trim() as keyof Metadata] = value
-  })
-
-  return { metadata: metadata as Metadata, content }
+export type Post = {
+  metadata: Metadata
+  slug: string
+  content: string
 }
 
-function getMDXFiles(dir) {
+function readMDXFile(filePath: string): { metadata: Metadata; content: string } {
+  const fileContent = fs.readFileSync(filePath, 'utf-8')
+  const { data, content } = matter(fileContent)
+
+  // Validate required fields
+  if (!data.title || !data.publishedAt || !data.summary) {
+    throw new Error(`Missing required frontmatter fields in ${filePath}`)
+  }
+
+  return {
+    metadata: data as Metadata,
+    content,
+  }
+}
+
+function getMDXFiles(dir: string): string[] {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx')
 }
 
-function readMDXFile(filePath) {
-  let rawContent = fs.readFileSync(filePath, 'utf-8')
-  return parseFrontmatter(rawContent)
-}
-
-function getMDXData(dir) {
-  let mdxFiles = getMDXFiles(dir)
+function getMDXData(dir: string): Post[] {
+  const mdxFiles = getMDXFiles(dir)
   return mdxFiles.map((file) => {
-    let { metadata, content } = readMDXFile(path.join(dir, file))
-    let slug = path.basename(file, path.extname(file))
+    const { metadata, content } = readMDXFile(path.join(dir, file))
+    const slug = path.basename(file, path.extname(file))
 
     return {
       metadata,
@@ -49,20 +49,20 @@ function getMDXData(dir) {
   })
 }
 
-export function getBlogPosts() {
+export function getBlogPosts(): Post[] {
   return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
 }
 
-export function formatDate(date: string, includeRelative = false) {
-  let currentDate = new Date()
+export function formatDate(date: string, includeRelative = false): string {
+  const currentDate = new Date()
   if (!date.includes('T')) {
     date = `${date}T00:00:00`
   }
-  let targetDate = new Date(date)
+  const targetDate = new Date(date)
 
-  let yearsAgo = currentDate.getFullYear() - targetDate.getFullYear()
-  let monthsAgo = currentDate.getMonth() - targetDate.getMonth()
-  let daysAgo = currentDate.getDate() - targetDate.getDate()
+  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear()
+  const monthsAgo = currentDate.getMonth() - targetDate.getMonth()
+  const daysAgo = currentDate.getDate() - targetDate.getDate()
 
   let formattedDate = ''
 
@@ -76,7 +76,7 @@ export function formatDate(date: string, includeRelative = false) {
     formattedDate = 'Today'
   }
 
-  let fullDate = targetDate.toLocaleString('en-us', {
+  const fullDate = targetDate.toLocaleString('en-us', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
@@ -87,4 +87,14 @@ export function formatDate(date: string, includeRelative = false) {
   }
 
   return `${fullDate} (${formattedDate})`
+}
+
+/**
+ * Calculate reading time for a blog post
+ * Average reading speed: ~200 words per minute
+ */
+export function calculateReadingTime(content: string): number {
+  const wordsPerMinute = 200
+  const words = content.trim().split(/\s+/).length
+  return Math.ceil(words / wordsPerMinute)
 }

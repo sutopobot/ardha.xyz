@@ -18,11 +18,12 @@ function ArrowIcon() {
 export default function Footer() {
   return (
     <footer className="mb-16">
-      <ul className="font-sm mt-8 flex flex-col space-x-0 space-y-2 text-neutral-600 md:flex-row md:space-x-4 md:space-y-0 dark:text-neutral-300">
+      <ul className="font-sm mt-8 flex flex-col space-x-0 space-y-2 text-neutral-600 md:flex-row md:space-x-4 md:space-y-0 dark:text-neutral-300" role="list">
         <li>
           <a
             className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
             href="mailto:mail@ardha.xyz"
+            aria-label="Send email to mail@ardha.xyz"
           >
             <ArrowIcon />
             <p className="ml-2 h-7">email</p>
@@ -34,6 +35,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://instagram.com/ardhayosef"
+            aria-label="Visit Instagram profile"
           >
             <ArrowIcon />
             <p className="ml-2 h-7">instagram</p>
@@ -45,6 +47,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://github.com/ardhayosef"
+            aria-label="Visit GitHub profile"
           >
             <ArrowIcon />
             <p className="ml-2 h-7">github</p>

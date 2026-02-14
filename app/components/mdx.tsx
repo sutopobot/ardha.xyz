@@ -1,10 +1,16 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import type { ImageProps } from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
-import React from 'react'
+import React, { HTMLAttributes, AnchorHTMLAttributes, ReactNode } from 'react'
 
-function Table({ data }) {
+type TableData = {
+  headers: string[]
+  rows: string[][]
+}
+
+function Table({ data }: { data: TableData }) {
   let headers = data.headers.map((header, index) => (
     <th key={index}>{header}</th>
   ))
@@ -26,8 +32,8 @@ function Table({ data }) {
   )
 }
 
-function CustomLink(props) {
-  let href = props.href
+function CustomLink(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  let href = props.href ?? ''
 
   if (href.startsWith('/')) {
     return (
@@ -44,62 +50,111 @@ function CustomLink(props) {
   return <a target="_blank" rel="noopener noreferrer" {...props} />
 }
 
-function RoundedImage(props) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />
+function RoundedImage(props: ImageProps) {
+  const { alt, ...rest } = props
+  return <Image alt={alt ?? ''} className="rounded-lg" {...rest} />
 }
 
-function Code({ children, ...props }) {
-  let codeHTML = highlight(children)
-  return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
+type CodeProps = HTMLAttributes<HTMLElement> & {
+  children?: ReactNode
 }
 
-function slugify(str) {
+function Code({ children, ...props }: CodeProps) {
+  return <code {...props}>{children}</code>
+}
+
+function slugify(str: string): string {
   return str
     .toString()
     .toLowerCase()
-    .trim() // Remove whitespace from both ends of a string
-    .replace(/\s+/g, '-') // Replace spaces with -
-    .replace(/&/g, '-and-') // Replace & with 'and'
-    .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for -
-    .replace(/\-\-+/g, '-') // Replace multiple - with single -
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/&/g, '-and-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
 }
 
-function createHeading(level) {
-  const Heading = ({ children }) => {
-    let slug = slugify(children)
-    return React.createElement(
-      `h${level}`,
-      { id: slug },
-      [
-        React.createElement('a', {
-          href: `#${slug}`,
-          key: `link-${slug}`,
-          className: 'anchor',
-        }),
-      ],
-      children
-    )
-  }
-
-  Heading.displayName = `Heading${level}`
-
-  return Heading
+// Create heading components with proper types
+function H1({ children, ...rest }: HTMLAttributes<HTMLHeadingElement>) {
+  const slug = typeof children === 'string' ? slugify(children) : ''
+  return (
+    <h1 id={slug} {...rest}>
+      <a href={`#${slug}`} className="anchor" aria-hidden="true" />
+      {children}
+    </h1>
+  )
 }
 
-let components = {
-  h1: createHeading(1),
-  h2: createHeading(2),
-  h3: createHeading(3),
-  h4: createHeading(4),
-  h5: createHeading(5),
-  h6: createHeading(6),
+function H2({ children, ...rest }: HTMLAttributes<HTMLHeadingElement>) {
+  const slug = typeof children === 'string' ? slugify(children) : ''
+  return (
+    <h2 id={slug} {...rest}>
+      <a href={`#${slug}`} className="anchor" aria-hidden="true" />
+      {children}
+    </h2>
+  )
+}
+
+function H3({ children, ...rest }: HTMLAttributes<HTMLHeadingElement>) {
+  const slug = typeof children === 'string' ? slugify(children) : ''
+  return (
+    <h3 id={slug} {...rest}>
+      <a href={`#${slug}`} className="anchor" aria-hidden="true" />
+      {children}
+    </h3>
+  )
+}
+
+function H4({ children, ...rest }: HTMLAttributes<HTMLHeadingElement>) {
+  const slug = typeof children === 'string' ? slugify(children) : ''
+  return (
+    <h4 id={slug} {...rest}>
+      <a href={`#${slug}`} className="anchor" aria-hidden="true" />
+      {children}
+    </h4>
+  )
+}
+
+function H5({ children, ...rest }: HTMLAttributes<HTMLHeadingElement>) {
+  const slug = typeof children === 'string' ? slugify(children) : ''
+  return (
+    <h5 id={slug} {...rest}>
+      <a href={`#${slug}`} className="anchor" aria-hidden="true" />
+      {children}
+    </h5>
+  )
+}
+
+function H6({ children, ...rest }: HTMLAttributes<HTMLHeadingElement>) {
+  const slug = typeof children === 'string' ? slugify(children) : ''
+  return (
+    <h6 id={slug} {...rest}>
+      <a href={`#${slug}`} className="anchor" aria-hidden="true" />
+      {children}
+    </h6>
+  )
+}
+
+// Use 'any' to avoid type conflicts with MDX components
+let components: Record<string, any> = {
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  h4: H4,
+  h5: H5,
+  h6: H6,
   Image: RoundedImage,
   a: CustomLink,
   code: Code,
   Table,
 }
 
-export function CustomMDX(props) {
+type CustomMDXProps = {
+  source: string
+  components?: Record<string, any>
+}
+
+export function CustomMDX(props: CustomMDXProps) {
   return (
     <MDXRemote
       {...props}

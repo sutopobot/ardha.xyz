@@ -1,7 +1,10 @@
 import { BlogPosts } from 'app/components/posts'
 import Image from 'next/image'
+import { getBlogPosts } from 'app/blog/utils'
 
 export default function Page() {
+  const posts = getBlogPosts()
+
   return (
     <section>
       <div className="mb-4">
@@ -22,7 +25,7 @@ export default function Page() {
           />
         </div>
         <h1 className="text-2xl font-semibold tracking-tighter mb-2">
-          I'm Ardha 
+          I'm Ardha
         </h1>
         <p>
           {`With a background in Marine Science and currently handling various issues in the climate
@@ -34,7 +37,7 @@ environmental conservation strategies.`}
         </p>
       </div>
       <div className="my-8">
-        <BlogPosts />
+        <BlogPosts posts={posts.slice(0, 3)} />
       </div>
     </section>
   )

@@ -1,8 +1,9 @@
-import { baseUrl } from 'app/sitemap'
 import { getBlogPosts } from 'app/blog/utils'
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ardha.xyz'
+
 export async function GET() {
-  let allBlogs = await getBlogPosts()
+  let allBlogs = getBlogPosts()
 
   const itemsXml = allBlogs
     .sort((a, b) => {
