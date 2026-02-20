@@ -111,10 +111,13 @@ Custom MDX components using `next-mdx-remote/rsc`:
    - `tags` - array of tags for categorization
    - `source.platform` - original platform (linkedin/x/substack)
    - `source.url` - URL to original post
-3. The post will be automatically picked up by `getBlogPosts()` and included in:
+3. **Content Language:**
+   - If `source` field is provided (LinkedIn/X/Substack): Write content in English
+   - If no `source` field: Write content in any language (default preference)
+4. The post will be automatically picked up by `getBlogPosts()` and included in:
    - Blog index page
    - Sitemap
    - RSS feed
    - Static generation at build time
 
-**Source Badge:** When `source` field is provided, a clickable badge with platform icon will appear next to the publish date, linking to the original post.
+**Source Badge:** When `source` field is provided, a natural text attribution will appear next to the publish date: "First published on [icon platform] at [link]". The icon and platform name are clickable and link to the original post.
