@@ -62,9 +62,6 @@ publishedAt: '2025-10-01'
 summary: 'Post summary'
 image: '/optional-image.png'  # Optional
 tags: ['tag1', 'tag2']          # Optional
-source:                          # Optional - for posts imported from other platforms
-  platform: 'linkedin' | 'x' | 'substack'
-  url: 'https://...'
 ---
 ```
 
@@ -109,15 +106,8 @@ Custom MDX components using `next-mdx-remote/rsc`:
 2. Add YAML frontmatter with `title`, `publishedAt`, `summary`, and optional fields:
    - `image` - cover image path
    - `tags` - array of tags for categorization
-   - `source.platform` - original platform (linkedin/x/substack)
-   - `source.url` - URL to original post
-3. **Content Language:**
-   - If `source` field is provided (LinkedIn/X/Substack): Write content in English
-   - If no `source` field: Write content in any language (default preference)
-4. The post will be automatically picked up by `getBlogPosts()` and included in:
+3. The post will be automatically picked up by `getBlogPosts()` and included in:
    - Blog index page
    - Sitemap
    - RSS feed
    - Static generation at build time
-
-**Source Badge:** When `source` field is provided, a natural text attribution will appear on the same line as the publish date: "First published on [icon platform] at [link]". The icon and platform name are clickable and link to the original post.
