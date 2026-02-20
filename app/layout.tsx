@@ -17,18 +17,18 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ardha.xyz'
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'Ardha',
-    template: '%s | Ardha',
+    default: 'Ardha Yosef',
+    template: '%s | Ardha Yosef',
   },
-  description: 'Personal website of Ardha.',
+  description: 'Personal website of Ardha Yosef.',
   icons: {
     icon: '/favicon.png',
   },
   openGraph: {
-    title: 'Ardha',
-    description: 'Personal website of Ardha.',
+    title: 'Ardha Yosef',
+    description: 'Personal website of Ardha Yosef.',
     url: baseUrl,
-    siteName: 'Ardha',
+    siteName: 'Ardha Yosef',
     locale: 'en_US',
     type: 'website',
   },

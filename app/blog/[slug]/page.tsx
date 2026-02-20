@@ -92,7 +92,7 @@ export default async function Blog({ params }: { params: Promise<PageParams> }) 
             url: `${baseUrl}/blog/${post.slug}`,
             author: {
               '@type': 'Person',
-              name: 'Ardha Portfolio',
+              name: 'Ardha Yosef Portfolio',
             },
           }),
         }}

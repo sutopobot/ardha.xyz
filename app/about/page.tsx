@@ -5,7 +5,7 @@ import matter from 'gray-matter'
 
 export const metadata = {
   title: 'About',
-  description: 'About Ardha.',
+  description: 'About Ardha Yosef.',
 }
 
 export default function AboutPage() {
