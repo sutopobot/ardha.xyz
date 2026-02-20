@@ -61,6 +61,10 @@ title: 'Post Title'
 publishedAt: '2025-10-01'
 summary: 'Post summary'
 image: '/optional-image.png'  # Optional
+tags: ['tag1', 'tag2']          # Optional
+source:                          # Optional - for posts imported from other platforms
+  platform: 'linkedin' | 'x' | 'substack'
+  url: 'https://...'
 ---
 ```
 
@@ -102,9 +106,15 @@ Custom MDX components using `next-mdx-remote/rsc`:
 ### Adding New Blog Posts
 
 1. Create a new `.mdx` file in `app/blog/posts/`
-2. Add YAML frontmatter with `title`, `publishedAt`, `summary`, and optional `image`
+2. Add YAML frontmatter with `title`, `publishedAt`, `summary`, and optional fields:
+   - `image` - cover image path
+   - `tags` - array of tags for categorization
+   - `source.platform` - original platform (linkedin/x/substack)
+   - `source.url` - URL to original post
 3. The post will be automatically picked up by `getBlogPosts()` and included in:
    - Blog index page
    - Sitemap
    - RSS feed
    - Static generation at build time
+
+**Source Badge:** When `source` field is provided, a clickable badge with platform icon will appear next to the publish date, linking to the original post.

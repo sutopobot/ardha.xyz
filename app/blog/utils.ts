@@ -8,6 +8,10 @@ export type Metadata = {
   summary: string
   image?: string
   tags?: string[]
+  source?: {
+    platform: 'linkedin' | 'x' | 'substack'
+    url: string
+  }
 }
 
 export type Post = {

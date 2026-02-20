@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { CustomMDX } from 'app/components/mdx'
+import { SourceBadge } from 'app/components/source-badge'
 import { formatDate, getBlogPosts } from 'app/blog/utils'
 import type { Metadata } from 'next'
 
@@ -101,9 +102,17 @@ export default async function Blog({ params }: { params: Promise<PageParams> }) 
         {post.metadata.title}
       </h1>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 mb-8 text-sm gap-2">
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          {formatDate(post.metadata.publishedAt)}
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            {formatDate(post.metadata.publishedAt)}
+          </p>
+          {post.metadata.source && (
+            <SourceBadge
+              platform={post.metadata.source.platform}
+              url={post.metadata.source.url}
+            />
+          )}
+        </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-neutral-600 dark:text-neutral-400">
             {calculateReadingTime(post.content)} min read
